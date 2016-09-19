@@ -60,21 +60,21 @@ class DemoTest(unittest.TestCase):
         CASE_NOW = ''
         CYCLE_NOW = 0
 
-    # def testLaunchExit(self):
-    #     '''
-    #         Steps:
-    #             1. Launch (in setUp)
-    #             2. Exit & Launch multi-times
-    #             3. Exit (in tearDown)
-    #     '''
-    #     global CASE_NOW
-    #     global CYCLE_NOW
-    #     CASE_NOW = "testLaunchExit"
-    #     print "%s ...\t"%CASE_NOW,
-    #     for i in range(TEST_CYCLE):
-    #         CYCLE_NOW = i + 1
-    #         self.exitDemo()
-    #         self.launchDemo()
+    def testLaunchExit(self):
+        '''
+            Steps:
+                1. Launch (in setUp)
+                2. Exit & Launch multi-times
+                3. Exit (in tearDown)
+        '''
+        global CASE_NOW
+        global CYCLE_NOW
+        CASE_NOW = "testLaunchExit"
+        print "%s ...\t"%CASE_NOW,
+        for i in range(TEST_CYCLE):
+            CYCLE_NOW = i + 1
+            self.exitDemo()
+            self.launchDemo()
 
     # def testHome(self):
     #     '''
@@ -194,17 +194,18 @@ class DemoTest(unittest.TestCase):
         # assert d(packageName = pkgname).wait.exists(timeout = 3000)
 
     def exitDemo(self):
-        if d(resourceId = "android:id/le_bottomsheet_default_confirm").wait.exists(timeout = 5000):
-            d(resourceId = "android:id/le_bottomsheet_default_confirm").click.wait()
-        d.press('recent')
-        time.sleep(1)
-        # assert d(resourceId = 'com.android.systemui:id/leui_recent_thumbnail').wait.exists(timeout = 3000)
-        info_th = d(resourceId = 'com.android.systemui:id/leui_recent_thumbnail', instance = 1).info
-        boun_th = info_th['bounds']
-        cent_th_y = (boun_th['bottom'] + boun_th['top'])/2
-        cent_th_x = (boun_th['right'] + boun_th['left'])/2
-        d.swipe(cent_th_x, cent_th_y, cent_th_x, boun_th['top']/2, 5) # Slide up to remove recent task
-        d.press('back')
+        if d(packageName = pkgname).wait.exists(timeout = 3000):
+            if d(resourceId = "android:id/le_bottomsheet_default_confirm").wait.exists(timeout = 5000):
+                d(resourceId = "android:id/le_bottomsheet_default_confirm").click.wait()
+            d.press('recent')
+            time.sleep(1)
+            # assert d(resourceId = 'com.android.systemui:id/leui_recent_thumbnail').wait.exists(timeout = 3000)
+            info_th = d(resourceId = 'com.android.systemui:id/leui_recent_thumbnail', instance = 1).info
+            boun_th = info_th['bounds']
+            cent_th_y = (boun_th['bottom'] + boun_th['top'])/2
+            cent_th_x = (boun_th['right'] + boun_th['left'])/2
+            d.swipe(cent_th_x, cent_th_y, cent_th_x, boun_th['top']/2, 5) # Slide up to remove recent task
+            d.press('back')
 
     def randomSwipe(self, half_screen = None):
         deviceInfo = d.info
