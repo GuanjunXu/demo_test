@@ -7,7 +7,7 @@ import time
 import random
 import commands
 
-d = Device("a9bb963a")
+d = Device("92593704")
 
 pkgname = "com.qualcomm.boxworld"
 actname = "%s/com.unity3d.player.UnityPlayerActivity"%pkgname
@@ -33,7 +33,7 @@ class DemoTest(unittest.TestCase):
         start_time = time.time()
         print "start: \t%s"%(time.strftime('%Y%m%d_%H%M%S',time.localtime(start_time)))
         print "case name: ",
-        self.launchDemo()
+        # self.launchDemo()
 
     def tearDown(self):
         super(DemoTest, self).tearDown()
@@ -52,7 +52,7 @@ class DemoTest(unittest.TestCase):
             strpath = 'Demo_Test/%s_end_at_%s_%s'%(CASE_NOW,CYCLE_NOW,fmtime)
             os.makedirs(strpath)
             commands.getoutput('adb shell logcat -d > %s/logcat_%s.txt'%(strpath,fmtime))
-            commands.getoutput('adb bugrepot > %s/0_bugreport.log'%strpath)
+            # commands.getoutput('adb bugrepot > %s/0_bugreport.log'%strpath)
             commands.getoutput('adb pull /sdcard/%s.png ./%s'%(fmtime,strpath))
         else:
             print ": - Pass -"
@@ -71,29 +71,33 @@ class DemoTest(unittest.TestCase):
         global CYCLE_NOW
         CASE_NOW = "testLaunchExit"
         print "%s ...\t"%CASE_NOW,
+        d(text = "boxworld").click.wait()
+        time.sleep(2)
         for i in range(TEST_CYCLE):
             CYCLE_NOW = i + 1
             self.exitDemo()
             self.launchDemo()
 
-    # def testHome(self):
-    #     '''
-    #         Steps:
-    #             1. Launch (in setUp)
-    #             2. Home key
-    #             3. Return to demo
-    #             4. Re-run 2~3
-    #             5. Exit (in tearDown)
-    #     '''
-    #     global CASE_NOW
-    #     global CYCLE_NOW
-    #     CASE_NOW = "testHome"
-    #     print "%s ...\t"%CASE_NOW,
-    #     for i in range(TEST_CYCLE):
-    #         print "cycle now is: " + str(i)
-    #         CYCLE_NOW = i + 1
-    #         d.press('home')
-    #         self.launchDemo()
+    def testHome(self):
+        '''
+            Steps:
+                1. Launch (in setUp)
+                2. Home key
+                3. Return to demo
+                4. Re-run 2~3
+                5. Exit (in tearDown)
+        '''
+        global CASE_NOW
+        global CYCLE_NOW
+        CASE_NOW = "testHome"
+        print "%s ...\t"%CASE_NOW,
+        d(text = "boxworld").click.wait()
+        time.sleep(2)
+        for i in range(TEST_CYCLE):
+            print "cycle now is: " + str(i)
+            CYCLE_NOW = i + 1
+            d.press('home')
+            self.launchDemo()
 
     def testRecent(self):
         '''
@@ -107,7 +111,10 @@ class DemoTest(unittest.TestCase):
         global CASE_NOW
         global CYCLE_NOW
         CASE_NOW = "testRecent"
+        self.launchDemo()
         print "%s ...\t"%CASE_NOW,
+        d(text = "boxworld").click.wait()
+        time.sleep(2)
         for i in range(TEST_CYCLE):
             CYCLE_NOW = i + 1
             d.press('recent')
@@ -127,6 +134,9 @@ class DemoTest(unittest.TestCase):
         global CYCLE_NOW
         CASE_NOW = "testPower"
         print "%s ...\t"%CASE_NOW,
+        d(text = "boxworld").click.wait()
+        time.sleep(2)
+        self.launchDemo()
         for i in range(TEST_CYCLE):
             CYCLE_NOW = i + 1
             d.press('power')
@@ -148,6 +158,8 @@ class DemoTest(unittest.TestCase):
     #     global CYCLE_NOW
     #     CASE_NOW = "testSlideBall"
     #     print "%s ...\t"%CASE_NOW,
+        d(text = "boxworld").click.wait()
+        time.sleep(2)
     #     for i in range(TEST_CYCLE):
     #         CYCLE_NOW = i + 1
     #         for j in range(10):
@@ -165,6 +177,8 @@ class DemoTest(unittest.TestCase):
     #     global CYCLE_NOW
     #     CASE_NOW = "testPinchBall"
     #     print "%s ...\t"%CASE_NOW,
+        d(text = "boxworld").click.wait()
+        time.sleep(2)
     #     for i in range(TEST_CYCLE):
     #         CYCLE_NOW = i + 1
     #         method = random.choice(["in", "out"])
@@ -182,13 +196,39 @@ class DemoTest(unittest.TestCase):
     #     global CYCLE_NOW
     #     CASE_NOW = "testPsensor"
     #     print "%s ...\t"%CASE_NOW,
+        d(text = "boxworld").click.wait()
+        time.sleep(2)
     #     for i in range(TEST_CYCLE):
     #         CYCLE_NOW = i + 1
+
+    def testSwitchLVRSVR(self):
+        global CASE_NOW
+        global CYCLE_NOW
+        CASE_NOW = "testSwitchLVRSVR"
+        print "%s ...\t"%CASE_NOW,
+        d(text = "boxworld").click.wait()
+        time.sleep(2)
+        d.press("home")
+        time.sleep(2)
+        d(textContains = "LeVR_2016").click.wait()
+        time.sleep(2)
+        for i in range(500):
+            CYCLE_NOW = i + 1
+            d.press("recent")
+            d(resourceId = 'com.android.systemui:id/leui_recent_thumbnail', instance = 2).click.wait()
+            time.sleep(2)
+            if i%2 == 0:
+                assert d(packageName = 'com.qualcomm.boxworld').wait.exists(timeout = 5000)
+            else:
+                assert d(packageName = 'com.LeEco.LeVR').wait.exists(timeout = 5000)
 
     def launchDemo(self):
         if d(resourceId = "android:id/le_bottomsheet_default_confirm").wait.exists(timeout = 5000):
             d(resourceId = "android:id/le_bottomsheet_default_confirm").click.wait()
         # commands.getoutput("adb shell am start -n %s")%pkgname # Launch
+        while d(text = 'boxworld').wait.gone(timeout = 2000):
+            d.press('home')
+            d.swipe(1400,1300,0,1300,5)
         d(text = 'boxworld').click.wait()
         time.sleep(1)
         # assert d(packageName = pkgname).wait.exists(timeout = 3000)
