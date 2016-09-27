@@ -1,16 +1,17 @@
 #coding=utf-8
 
-from uiautomator import Device
+from uiautomator import device as d
+#from uiautomator import Device
 import unittest
 import os
 import time
 import random
 import commands
 
-d = Device("92593704")
+#d = Device("a9bb963a")
 
-pkgname = "com.qualcomm.boxworld"
-actname = "%s/com.unity3d.player.UnityPlayerActivity"%pkgname
+pkgname = "com.LeEco.LeVR" #"com.qualcomm.boxworld"
+#actname = "%s/com.unity3d.player.UnityPlayerActivity"%pkgname
 
 TEST_CYCLE = 500
 CASE_NOW = ''
@@ -71,7 +72,8 @@ class DemoTest(unittest.TestCase):
         global CYCLE_NOW
         CASE_NOW = "testLaunchExit"
         print "%s ...\t"%CASE_NOW,
-        d(text = "boxworld").click.wait()
+        #d(text = "boxworld").click.wait()
+        d(textContains = 'LeVR_2016').click.wait()
         time.sleep(2)
         for i in range(TEST_CYCLE):
             CYCLE_NOW = i + 1
@@ -91,7 +93,8 @@ class DemoTest(unittest.TestCase):
         global CYCLE_NOW
         CASE_NOW = "testHome"
         print "%s ...\t"%CASE_NOW,
-        d(text = "boxworld").click.wait()
+        #d(text = "boxworld").click.wait()
+        d(textContains = 'LeVR_2016').click.wait()
         time.sleep(2)
         for i in range(TEST_CYCLE):
             print "cycle now is: " + str(i)
@@ -113,12 +116,13 @@ class DemoTest(unittest.TestCase):
         CASE_NOW = "testRecent"
         self.launchDemo()
         print "%s ...\t"%CASE_NOW,
-        d(text = "boxworld").click.wait()
+        #d(text = "boxworld").click.wait()
         time.sleep(2)
         for i in range(TEST_CYCLE):
             CYCLE_NOW = i + 1
             d.press('recent')
             d(resourceId = 'com.android.systemui:id/leui_recent_thumbnail', instance = 1).click.wait()
+            time.sleep(3)
             assert d(packageName = pkgname).wait.exists(timeout = 3000)
 
     def testPower(self):
@@ -134,7 +138,8 @@ class DemoTest(unittest.TestCase):
         global CYCLE_NOW
         CASE_NOW = "testPower"
         print "%s ...\t"%CASE_NOW,
-        d(text = "boxworld").click.wait()
+        #d(text = "boxworld").click.wait()
+        d(textContains = 'LeVR_2016').click.wait()
         time.sleep(2)
         self.launchDemo()
         for i in range(TEST_CYCLE):
@@ -147,43 +152,45 @@ class DemoTest(unittest.TestCase):
             time.sleep(5)
             assert d(packageName = pkgname).wait.exists(timeout = 5000)
 
-    # def testSlideBall(self):
-    #     '''
-    #         Steps:
-    #             1. Launch (in setUp)
-    #             2. Slide on screen multi-times
-    #             3. Exit (in tearDown)
-    #     '''
-    #     global CASE_NOW
-    #     global CYCLE_NOW
-    #     CASE_NOW = "testSlideBall"
-    #     print "%s ...\t"%CASE_NOW,
-        d(text = "boxworld").click.wait()
+    def testSlideBall(self):
+        '''
+            Steps:
+                1. Launch (in setUp)
+                2. Slide on screen multi-times
+                3. Exit (in tearDown)
+        '''
+        global CASE_NOW
+        global CYCLE_NOW
+        CASE_NOW = "testSlideBall"
+        print "%s ...\t"%CASE_NOW,
+        #d(text = "boxworld").click.wait()
+        d(textContains = 'LeVR_2016').click.wait()
         time.sleep(2)
-    #     for i in range(TEST_CYCLE):
-    #         CYCLE_NOW = i + 1
-    #         for j in range(10):
-    #             self.randomSwipe()
-    #             assert d(packageName = pkgname).wait.exists(timeout = 3000)
+        for i in range(TEST_CYCLE):
+            CYCLE_NOW = i + 1
+            for j in range(10):
+                self.randomSwipe()
+                assert d(packageName = pkgname).wait.exists(timeout = 3000)
 
-    # def testPinchBall(self):
-    #     '''
-    #         Steps:
-    #             1. Launch (in setUp)
-    #             2. Pinch in/out on screen multi-times
-    #             3. Exit (in tearDown)
-    #     '''
-    #     global CASE_NOW
-    #     global CYCLE_NOW
-    #     CASE_NOW = "testPinchBall"
-    #     print "%s ...\t"%CASE_NOW,
-        d(text = "boxworld").click.wait()
+    def testPinchBall(self):
+        '''
+            Steps:
+                1. Launch (in setUp)
+                2. Pinch in/out on screen multi-times
+                3. Exit (in tearDown)
+        '''
+        global CASE_NOW
+        global CYCLE_NOW
+        CASE_NOW = "testPinchBall"
+        print "%s ...\t"%CASE_NOW,
+        #d(text = "boxworld").click.wait()
+        d(textContains = 'LeVR_2016').click.wait()
         time.sleep(2)
-    #     for i in range(TEST_CYCLE):
-    #         CYCLE_NOW = i + 1
-    #         method = random.choice(["in", "out"])
-    #         self.randomPinch(method)
-    #         assert d(packageName = pkgname).wait.exists(timeout = 3000)
+        for i in range(TEST_CYCLE):
+            CYCLE_NOW = i + 1
+            method = random.choice(["in", "out"])
+            self.randomPinch(method)
+            assert d(packageName = pkgname).wait.exists(timeout = 3000)
 
     # def testPsensor(self):
     #     '''
@@ -196,40 +203,42 @@ class DemoTest(unittest.TestCase):
     #     global CYCLE_NOW
     #     CASE_NOW = "testPsensor"
     #     print "%s ...\t"%CASE_NOW,
-        d(text = "boxworld").click.wait()
-        time.sleep(2)
+    #   d(text = "boxworld").click.wait()
+    #   time.sleep(2)
     #     for i in range(TEST_CYCLE):
     #         CYCLE_NOW = i + 1
 
-    def testSwitchLVRSVR(self):
-        global CASE_NOW
-        global CYCLE_NOW
-        CASE_NOW = "testSwitchLVRSVR"
-        print "%s ...\t"%CASE_NOW,
-        d(text = "boxworld").click.wait()
-        time.sleep(2)
-        d.press("home")
-        time.sleep(2)
-        d(textContains = "LeVR_2016").click.wait()
-        time.sleep(2)
-        for i in range(500):
-            CYCLE_NOW = i + 1
-            d.press("recent")
-            d(resourceId = 'com.android.systemui:id/leui_recent_thumbnail', instance = 2).click.wait()
-            time.sleep(2)
-            if i%2 == 0:
-                assert d(packageName = 'com.qualcomm.boxworld').wait.exists(timeout = 5000)
-            else:
-                assert d(packageName = 'com.LeEco.LeVR').wait.exists(timeout = 5000)
+    # def testSwitchLVRSVR(self):
+    #     global CASE_NOW
+    #     global CYCLE_NOW
+    #     CASE_NOW = "testSwitchLVRSVR"
+    #     print "%s ...\t"%CASE_NOW,
+    #     d(text = "boxworld").click.wait()
+    #     time.sleep(2)
+    #     d.press("home")
+    #     time.sleep(2)
+    #     d(textContains = "LeVR_2016").click.wait()
+    #     time.sleep(2)
+    #     for i in range(500):
+    #         CYCLE_NOW = i + 1
+    #         d.press("recent")
+    #         d(resourceId = 'com.android.systemui:id/leui_recent_thumbnail', instance = 2).click.wait()
+    #         time.sleep(2)
+    #         if i%2 == 0:
+    #             assert d(packageName = 'com.qualcomm.boxworld').wait.exists(timeout = 5000)
+    #         else:
+    #             assert d(packageName = 'com.LeEco.LeVR').wait.exists(timeout = 5000)
 
     def launchDemo(self):
         if d(resourceId = "android:id/le_bottomsheet_default_confirm").wait.exists(timeout = 5000):
             d(resourceId = "android:id/le_bottomsheet_default_confirm").click.wait()
         # commands.getoutput("adb shell am start -n %s")%pkgname # Launch
-        while d(text = 'boxworld').wait.gone(timeout = 2000):
+        #while d(text = 'boxworld').wait.gone(timeout = 2000):
+        while d(textContains = 'LeVR_2016').wait.gone(timeout = 2000):
             d.press('home')
             d.swipe(1400,1300,0,1300,5)
-        d(text = 'boxworld').click.wait()
+        # d(text = 'boxworld').click.wait()
+        d(textContains = 'LeVR_2016').click.wait()
         time.sleep(1)
         # assert d(packageName = pkgname).wait.exists(timeout = 3000)
 
