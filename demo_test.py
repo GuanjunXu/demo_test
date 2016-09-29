@@ -1,16 +1,17 @@
 #coding=utf-8
 
-from uiautomator import device as d
-#from uiautomator import Device
+#from uiautomator import device as d
+from uiautomator import Device
 import unittest
 import os
 import time
 import random
 import commands
 
-#d = Device("a9bb963a")
+deviceid = "LE67A06070274161"
+d = Device(deviceid)
 
-pkgname = "com.LeEco.LeVR" #"com.qualcomm.boxworld"
+pkgname = "com.LeVR.STARSANCTION" #"com.qualcomm.boxworld"  com.LeEco.LeVR
 #actname = "%s/com.unity3d.player.UnityPlayerActivity"%pkgname
 
 TEST_CYCLE = 500
@@ -49,12 +50,12 @@ class DemoTest(unittest.TestCase):
             print ": Fail..."
             whatnow = time.time()
             fmtime  = time.strftime('%Y%m%d_%H%M%S',time.localtime(whatnow))
-            commands.getoutput('adb shell /system/bin/screencap -p /sdcard/%s.png'%(fmtime))
-            strpath = 'Demo_Test/%s_end_at_%s_%s'%(CASE_NOW,CYCLE_NOW,fmtime)
+            commands.getoutput('adb -s %s shell /system/bin/screencap -p /sdcard/%s.png'%(deviceid,fmtime))
+            strpath = 'Demo_Test_2/%s_end_at_%s_%s'%(CASE_NOW,CYCLE_NOW,fmtime)
             os.makedirs(strpath)
-            commands.getoutput('adb shell logcat -d > %s/logcat_%s.txt'%(strpath,fmtime))
-            # commands.getoutput('adb bugrepot > %s/0_bugreport.log'%strpath)
-            commands.getoutput('adb pull /sdcard/%s.png ./%s'%(fmtime,strpath))
+            commands.getoutput('adb -s %s shell logcat -d > %s/logcat_%s.txt'%(deviceid,strpath,fmtime))
+            # commands.getoutput('adb -s %s bugrepot > %s/0_bugreport.log'%(deviceid,strpath))
+            commands.getoutput('adb -s %s pull /sdcard/%s.png ./%s'%(deviceid,fmtime,strpath))
         else:
             print ": - Pass -"
         self.exitDemo()
@@ -73,7 +74,7 @@ class DemoTest(unittest.TestCase):
         CASE_NOW = "testLaunchExit"
         print "%s ...\t"%CASE_NOW,
         #d(text = "boxworld").click.wait()
-        d(textContains = 'LeVR_2016').click.wait()
+        d(textContains = 'STARSANC').click.wait()
         time.sleep(2)
         for i in range(TEST_CYCLE):
             CYCLE_NOW = i + 1
@@ -94,7 +95,7 @@ class DemoTest(unittest.TestCase):
         CASE_NOW = "testHome"
         print "%s ...\t"%CASE_NOW,
         #d(text = "boxworld").click.wait()
-        d(textContains = 'LeVR_2016').click.wait()
+        d(textContains = 'STARSANC').click.wait()
         time.sleep(2)
         for i in range(TEST_CYCLE):
             print "cycle now is: " + str(i)
@@ -139,7 +140,7 @@ class DemoTest(unittest.TestCase):
         CASE_NOW = "testPower"
         print "%s ...\t"%CASE_NOW,
         #d(text = "boxworld").click.wait()
-        d(textContains = 'LeVR_2016').click.wait()
+        d(textContains = 'STARSANC').click.wait()
         time.sleep(2)
         self.launchDemo()
         for i in range(TEST_CYCLE):
@@ -164,7 +165,7 @@ class DemoTest(unittest.TestCase):
         CASE_NOW = "testSlideBall"
         print "%s ...\t"%CASE_NOW,
         #d(text = "boxworld").click.wait()
-        d(textContains = 'LeVR_2016').click.wait()
+        d(textContains = 'STARSANC').click.wait()
         time.sleep(2)
         for i in range(TEST_CYCLE):
             CYCLE_NOW = i + 1
@@ -184,7 +185,7 @@ class DemoTest(unittest.TestCase):
         CASE_NOW = "testPinchBall"
         print "%s ...\t"%CASE_NOW,
         #d(text = "boxworld").click.wait()
-        d(textContains = 'LeVR_2016').click.wait()
+        d(textContains = 'STARSANC').click.wait()
         time.sleep(2)
         for i in range(TEST_CYCLE):
             CYCLE_NOW = i + 1
@@ -217,7 +218,7 @@ class DemoTest(unittest.TestCase):
     #     time.sleep(2)
     #     d.press("home")
     #     time.sleep(2)
-    #     d(textContains = "LeVR_2016").click.wait()
+    #     d(textContains = 'LeVR_2016').click.wait()
     #     time.sleep(2)
     #     for i in range(500):
     #         CYCLE_NOW = i + 1
@@ -232,13 +233,13 @@ class DemoTest(unittest.TestCase):
     def launchDemo(self):
         if d(resourceId = "android:id/le_bottomsheet_default_confirm").wait.exists(timeout = 5000):
             d(resourceId = "android:id/le_bottomsheet_default_confirm").click.wait()
-        # commands.getoutput("adb shell am start -n %s")%pkgname # Launch
+        # commands.getoutput("adb -s %s shell am start -n %s"%(deviceid,pkgname)) # Launch
         #while d(text = 'boxworld').wait.gone(timeout = 2000):
-        while d(textContains = 'LeVR_2016').wait.gone(timeout = 2000):
+        while d(textContains = 'STARSANC').wait.gone(timeout = 2000):
             d.press('home')
             d.swipe(1400,1300,0,1300,5)
         # d(text = 'boxworld').click.wait()
-        d(textContains = 'LeVR_2016').click.wait()
+        d(textContains = 'STARSANC').click.wait()
         time.sleep(1)
         # assert d(packageName = pkgname).wait.exists(timeout = 3000)
 
